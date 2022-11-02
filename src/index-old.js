@@ -16,18 +16,17 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => { // Escuchamos el evento connection
+    console.log(`Clientes conectados: ${io.engine.clientsCount}`); // Imprimimos en consola el número de clientes conectados
+    console.log(socket.id); // Imprimimos en consola el mensaje
 
-    //Emisión básica
-    socket.emit("Bienvenido", "Ahora estás conectado"); // Emite un evento a todos los sockets conectados
+    /* Listening for the disconnect event. */
+    socket.on("disconnect", () => {
+        console.log(`El socket ${socket.id} se ha desconectado`);
+    })
 
-    //Escuchamos el evento emit-to-server
-    socket.on("emit-to-server", (data) => {
-        console.log(data); // Imprimimos el mensaje recibido
+    socket.conn.once('upgrade', () => {
+        console.log(`Hemos pasado de HTTP Long Polling a ${socket.conn.transport.name}`);
     });
-
-    //Emisión a todos los sockets conectados
-    io.emit("everyone", socket.id + " se ha conectado"); // Emite un evento a todos los sockets conectados
-
 
 });
 

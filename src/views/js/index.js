@@ -1,32 +1,17 @@
 const socket = io(); // Creamos una instancia de socket.io
 
-const checkSocketStatus = () => {
-    console.log(`Estado de socket: ${socket.connected}`);
-}
-
-//Escuchamos el evento de error de conexión y mostramos un console log en el cliente
-socket.io.on('connect_error', () => {
-    console.log(`Error de conexión 😢 `);
+socket.on("Bienvenido", (data) => {
+    console.log(data); // Imprimimos el mensaje recibido
+    const mensaje = document.getElementById("mensaje").innerText = data;
 });
 
-//Mostramos un console log del socket id en el cliente
-socket.on('connect', () => {
-  console.log(`El socket se ha conectado: ${socket.id}`);
-  checkSocketStatus();
+const emitToServer = document.getElementById("emit-to-server");
+emitToServer.addEventListener("click", () => {
+    socket.emit("emit-to-server", "Hola servidor");
 });
 
-//Escuchamos el evento disconnect y mostramos un console log en el cliente
-socket.on('disconnect', () => {
-    console.log(`El socket se ha desconectado: ${socket.id}`);
-    checkSocketStatus();
-});
 
-//Escuchamos el evento de intento de reconexión y mostramos un console log en el cliente el intento de reconexión
-socket.io.on('reconnect_attempt', () => {
-    console.log(`Intentando reconectar...😜`);
-});
-
-//Escuchamos el evento de reconectado y mostramos un console log en el cliente
-socket.io.on('reconnect', () => {
-    console.log(`Me he reconectado 😎`);
-});
+/* Listening for the event "everyone" and when it receives it, it prints the message. */
+socket.on("everyone", mensaje => {
+    console.log("Mensaje recibido: " + mensaje);
+})
