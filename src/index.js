@@ -16,7 +16,18 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => { // Escuchamos el evento connection
+    console.log(`Clientes conectados: ${io.engine.clientsCount}`); // Imprimimos en consola el número de clientes conectados
     console.log(socket.id); // Imprimimos en consola el mensaje
+
+    /* Listening for the disconnect event. */
+    socket.on("disconnect", () => {
+        console.log(`El socket ${socket.id} se ha desconectado`);
+    })
+
+    socket.conn.once('upgrade', () => {
+        console.log(`Hemos pasado de HTTP Long Polling a ${socket.conn.transport.name}`);
+    });
+
 });
 
 httpServer.listen(3000); // Escuchamos en el puerto 3000
