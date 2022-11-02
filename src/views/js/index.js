@@ -15,3 +15,13 @@ emitToServer.addEventListener("click", () => {
 socket.on("everyone", mensaje => {
     console.log("Mensaje recibido: " + mensaje);
 })
+
+// Ahora se emitirá un mensaje al último socket conectado
+const emitToLast = document.getElementById("emit-to-last");
+emitToLast.addEventListener("click", () => {
+    socket.emit("last", "Hola último socket conectado 🫡");
+});
+
+socket.on("saludo", mensaje => {
+    console.log(mensaje);
+});
