@@ -41,8 +41,24 @@ io.on('connection', (socket) => { // Escuchamos el evento connection
         io.to(lastSocket).emit("saludo", mensaje); // Emite un evento al último socket conectado
     });
 
-    
+    //Diferencia entre on, once y off
 
+    //Se usa para detectar (o escuchar) un evento varias veces.
+    /* socket.emit("one", "Hola");
+    socket.emit("one", "Hola");
+    socket.emit("one", "Hola"); */
+
+    //Aunque lo emitamos varias veces, el resultado al final será solo uno
+    socket.emit("once", "Hola");
+    socket.emit("once", "Hola");
+    socket.emit("once", "Hola");
+
+    //El off Se usa para dejar de escuchar un evento, sin importar que este se siga emitiendo.
+    socket.emit("off", "Hola");
+
+    setTimeout(() => {
+        socket.emit("off", "Hola");
+    }, 3000);
 });
 
 httpServer.listen(3000); // Escuchamos en el puerto 3000

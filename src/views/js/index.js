@@ -25,3 +25,22 @@ emitToLast.addEventListener("click", () => {
 socket.on("saludo", mensaje => {
     console.log(mensaje);
 });
+
+//Diferencia entre on, once y off
+socket.on("one", () => {
+    console.log("Se emite varias veces");
+})
+
+socket.once("once", () => {
+    console.log("Se emite una vez");
+});
+
+const listener = () => {
+    console.log("Se apaga el evento")
+}
+
+socket.on("off", listener);
+
+setTimeout(() => {
+    socket.off("off", listener);
+},2000);
