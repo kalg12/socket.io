@@ -1,46 +1,35 @@
 const socket = io(); // Creamos una instancia de socket.io
 
-socket.on("Bienvenido", (data) => {
-    console.log(data); // Imprimimos el mensaje recibido
-    const mensaje = document.getElementById("mensaje").innerText = data;
-});
+const circle = document.querySelector('#circle'); // Seleccionamos el elemento con clase circle
 
-const emitToServer = document.getElementById("emit-to-server");
-emitToServer.addEventListener("click", () => {
-    socket.emit("emit-to-server", "Hola servidor");
-});
-
-
-/* Listening for the event "everyone" and when it receives it, it prints the message. */
-socket.on("everyone", mensaje => {
-    console.log("Mensaje recibido: " + mensaje);
-})
-
-// Ahora se emitirá un mensaje al último socket conectado
-const emitToLast = document.getElementById("emit-to-last");
-emitToLast.addEventListener("click", () => {
-    socket.emit("last", "Hola último socket conectado 🫡");
-});
-
-socket.on("saludo", mensaje => {
-    console.log(mensaje);
-});
-
-//Diferencia entre on, once y off
-socket.on("one", () => {
-    console.log("Se emite varias veces");
-})
-
-socket.once("once", () => {
-    console.log("Se emite una vez");
-});
-
-const listener = () => {
-    console.log("Se apaga el evento")
+const drawCircle = position => {
+    circle.style.top = position.top;
+    circle.style.left = position.left;
 }
 
-socket.on("off", listener);
+const drag = (e) => {
 
-setTimeout(() => {
-    socket.off("off", listener);
-},2000);
+    //Creamos una constante con el nombre position que tendrá el objeto de las posiciones
+    const position = {
+        top: e.clientY + "px",
+        left: e.clientX + "px"
+    }
+
+    drawCircle(position); // Llamamos a la función drawCircle y le pasamos como parámetro el objeto position
+
+    //Vamos a emitir los movimientos a otros clientes
+    socket.emit('circle position', position);
+
+}
+
+document.addEventListener('mousedown', e => {
+    document.addEventListener('mousemove', drag)
+});
+
+document.addEventListener("mouseup", e => {
+    document.removeEventListener('mousemove', drag)
+})
+
+socket.on('move circle', position => {
+    drawCircle(position);
+});
